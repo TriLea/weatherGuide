@@ -6,7 +6,7 @@ var resultText = document.querySelector('#result-text');
 var resultContent = document.querySelector('#result-content');
 var searchForm = document.querySelector('#search-form');
 
-var API_Key = 0;
+var API_Key = 'd7f16e022429c27e14665625f2e3a757';
 
 // function getParams() {
 //   // Get the search params out of the URL (i.e. `?q=london&format=photo`) and convert it to an array (i.e. ['?q=london', 'format=photo'])
@@ -101,6 +101,8 @@ function searchApi(query, format) {
     });
 }
 
+fucntion localStorage() {
+}
 
 function handleSearchFormSubmit(event) {
   event.preventDefault();
