@@ -1,26 +1,23 @@
-var now = dayjs();
-now.format("dddd,h,m");
-
-var hour = dayjs().hour();
-
 //fix
 var text = $('.textarea');
 var saveBtn = $('.saveBtn');
 
-var resultTextEl = document.querySelector('#result-text');
-var resultContentEl = document.querySelector('#result-content');
-var searchFormEl = document.querySelector('#search-form');
+var resultText = document.querySelector('#result-text');
+var resultContent = document.querySelector('#result-content');
+var searchForm = document.querySelector('#search-form');
 
-function getParams() {
-  // Get the search params out of the URL (i.e. `?q=london&format=photo`) and convert it to an array (i.e. ['?q=london', 'format=photo'])
-  var searchParamsArr = document.location.search.split('&');
+var API_Key = 0;
 
-  // Get the query and format values
-  var query = searchParamsArr[0].split('=').pop();
-  var format = searchParamsArr[1].split('=').pop();
+// function getParams() {
+//   // Get the search params out of the URL (i.e. `?q=london&format=photo`) and convert it to an array (i.e. ['?q=london', 'format=photo'])
+//   var searchParamsArr = document.location.search.split('&');
 
-  searchApi(query, format);
-}
+//   // Get the query and format values
+//   var query = searchParamsArr[0].split('=').pop();
+//   var format = searchParamsArr[1].split('=').pop();
+
+//   searchApi(query, format);
+// }
 
 function printResults(resultObj) {
   console.log(resultObj);
@@ -67,13 +64,13 @@ function printResults(resultObj) {
 }
 
 function searchApi(query, format) {
-  var locQueryUrl = 'https://www.loc.gov/search/?fo=json';
+  var locQueryUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_key}`;
 
-  if (format) {
-    locQueryUrl = 'https://www.loc.gov/' + format + '/?fo=json';
-  }
+  // if (format) {
+  //   locQueryUrl = 'https://www.loc.gov/' + format + '/?fo=json';
+  // }
 
-  locQueryUrl = locQueryUrl + '&q=' + query;
+  //locQueryUrl = locQueryUrl + '&q=' + query;
 
   fetch(locQueryUrl)
     .then(function (response) {
@@ -121,4 +118,4 @@ function handleSearchFormSubmit(event) {
 
 searchFormEl.addEventListener('submit', handleSearchFormSubmit);
 
-getParams();
+//getParams();
