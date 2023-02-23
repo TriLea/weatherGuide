@@ -5,6 +5,7 @@ var saveBtn = $('.saveBtn');
 var resultText = document.querySelector('#result-text');
 var resultContent = document.querySelector('#result-content');
 var searchForm = document.querySelector('#search-form');
+var inputSelect = document.querySelector('#forat-input');
 
 var API_Key = 'd7f16e022429c27e14665625f2e3a757';
 
@@ -18,6 +19,55 @@ var API_Key = 'd7f16e022429c27e14665625f2e3a757';
 
 //   searchApi(query, format);
 // }
+
+function reloadStorage()
+{
+  let history = localStorage.getItem("history");
+  if (history == null)
+  {
+    return;
+  }
+
+  var historyList = '';
+
+  for (let i = 0; i < history.length; i++) 
+  {
+    city = history[i];
+    historyList += `<options value=${city}>${city}</options>`;
+  }
+
+  inputSelect.innerHTML = historyList; //do backwards to get most recent first
+}
+
+function addToHistory(cityName)
+{
+
+  //adds to history list of city names previously searched
+  let history = localStorage.getItem("history");
+  if (history == null)
+  {
+    history = [];
+  }
+  else
+  {
+    history = JSON.parse(history);
+  }
+  
+  for (var i = 0; i < history.length; i++)
+  {
+    if (history[i] == cityName)
+    {
+      return;
+    }
+    else
+    {
+      history.push(cityName);
+    }
+  }
+
+  localStorage.setItem("history", JSON.stringify(history));
+  reloadStorage();
+}
 
 function printResults(resultObj) {
   console.log(resultObj);
@@ -77,31 +127,30 @@ function searchApi(query, format) {
       if (!response.ok) {
         throw response.json();
       }
-
+      //why does this use function?
       return response.json();
     })
-    .then(function (locRes) {
+    .then(function (localResults) {
       // write query to page so user knows what they are viewing
-      resultTextEl.textContent = locRes.search.query;
+      resultTextEl.textContent = localResults.search.query;
 
-      console.log(locRes);
+      console.log(localResults);
 
-      if (!locRes.results.length) {
+      if (!localResults.results.length) {
         console.log('No results found!');
         resultContentEl.innerHTML = '<h3>No results found, search again!</h3>';
       } else {
+
+        
         resultContentEl.textContent = '';
-        for (var i = 0; i < locRes.results.length; i++) {
-          printResults(locRes.results[i]);
+        for (var i = 0; i < localResults.results.length; i++) {
+          printResults(localResults.results[i]);
         }
       }
     })
     .catch(function (error) {
       console.error(error);
     });
-}
-
-fucntion localStorage() {
 }
 
 function handleSearchFormSubmit(event) {
@@ -119,5 +168,3 @@ function handleSearchFormSubmit(event) {
 }
 
 searchFormEl.addEventListener('submit', handleSearchFormSubmit);
-
-//getParams();
