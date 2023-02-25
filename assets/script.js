@@ -1,13 +1,11 @@
 //fix
-var text = $('.textarea');
-var saveBtn = $('.saveBtn');
 
 var resultText = document.querySelector('#result-text');
 var resultContent = document.querySelector('#result-content');
 var searchForm = document.querySelector('#search-form');
-var inputSelect = document.querySelector('#forat-input');
+var inputSelect = document.querySelector('#format-input');
 
-var API_Key = 'd7f16e022429c27e14665625f2e3a757';
+const API_Key = 'd7f16e022429c27e14665625f2e3a757';
 
 // function getParams() {
 //   // Get the search params out of the URL (i.e. `?q=london&format=photo`) and convert it to an array (i.e. ['?q=london', 'format=photo'])
@@ -110,42 +108,53 @@ function printResults(resultObj) {
 
   resultBody.append(titleEl, bodyContentEl, linkButtonEl);
 
-  resultContentEl.append(resultCard);
+  resultContent.append(resultCard);
 }
 
-function searchApi(query, format) {
-  var locQueryUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_key}`;
-
-  // if (format) {
-  //   locQueryUrl = 'https://www.loc.gov/' + format + '/?fo=json';
-  // }
-
-  //locQueryUrl = locQueryUrl + '&q=' + query;
+function searchApi(city) {
+  //geo coding api, lat and long
+  var locQueryUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_Key}`;
 
   fetch(locQueryUrl)
     .then(function (response) {
       if (!response.ok) {
-        throw response.json();
+        console.log('No results found!');
+        resultContent.innerHTML = '<h3>No results found, search again!</h3>';
       }
       //why does this use function?
       return response.json();
     })
-    .then(function (localResults) {
+    .then(function (locQueryUrl) {
       // write query to page so user knows what they are viewing
-      resultTextEl.textContent = localResults.search.query;
+      console.log(locQueryUrl);
+      console.log(locQueryUrl.coord.lat);
+      console.log(locQueryUrl.coord.lon);
 
-      console.log(localResults);
+      weatherFiveDay(locQueryUrl.coord.lat, locQueryUrl.coord.lon);
+    })
+}
 
-      if (!localResults.results.length) {
+function weatherFiveDay(lat, lon)
+{
+  var localFiveDay = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_Key}`;
+
+  fetch(localFiveDay)
+    .then(function (response) {
+      if (!response.ok) {
         console.log('No results found!');
-        resultContentEl.innerHTML = '<h3>No results found, search again!</h3>';
-      } else {
-
-        
-        resultContentEl.textContent = '';
-        for (var i = 0; i < localResults.results.length; i++) {
-          printResults(localResults.results[i]);
-        }
+        resultContent.innerHTML = '<h3>No results found, search again!</h3>';
+      }
+      //why does this use function?
+      return response.json();
+    })
+    .then(function (localFiveDay) {
+      // write query to page so user knows what they are viewing
+      console.log(localFiveDay);
+      for (var i = 2; i < 40; i += 8) // for loop should go through same time, there are 8 a day 3 hour intervals starting at 6:00:00
+      {
+        //iterate throught the days
+        //call printResults for each day
+        printResults(localFiveDay.list[i]);
       }
     })
     .catch(function (error) {
@@ -154,6 +163,7 @@ function searchApi(query, format) {
 }
 
 function handleSearchFormSubmit(event) {
+  addToHistory(); //add cityname to param
   event.preventDefault();
 
   var searchInputVal = document.querySelector('#search-input').value;
@@ -167,4 +177,4 @@ function handleSearchFormSubmit(event) {
   searchApi(searchInputVal, formatInputVal);
 }
 
-searchFormEl.addEventListener('submit', handleSearchFormSubmit);
+searchForm.addEventListener('submit', handleSearchFormSubmit);
