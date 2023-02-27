@@ -7,17 +7,6 @@ var inputSelect = document.querySelector('#format-input');
 
 const API_Key = 'd7f16e022429c27e14665625f2e3a757';
 
-// function getParams() {
-//   // Get the search params out of the URL (i.e. `?q=london&format=photo`) and convert it to an array (i.e. ['?q=london', 'format=photo'])
-//   var searchParamsArr = document.location.search.split('&');
-
-//   // Get the query and format values
-//   var query = searchParamsArr[0].split('=').pop();
-//   var format = searchParamsArr[1].split('=').pop();
-
-//   searchApi(query, format);
-// }
-
 function reloadStorage()
 {
   let history = localStorage.getItem("history");
@@ -78,35 +67,37 @@ function printResults(resultObj) {
   resultBody.classList.add('card-body');
   resultCard.append(resultBody);
 
-  var titleEl = document.createElement('h3');
-  titleEl.textContent = resultObj.title;
+  console.log(resultObj.dt_txt);
+  var titleEl = document.createElement('h3'); // setup for date
+  titleEl.textContent = '<strong>Date:</strong> ' + resultObj.dt_text + '<br/>';
 
-  var bodyContentEl = document.createElement('p');
-  bodyContentEl.innerHTML =
-    '<strong>Date:</strong> ' + resultObj.date + '<br/>';
+  //setup icon for weather
+  console.log(); // log out icon?
+  var iconEl = document.createElement('img');
+  iconEl.setAttribute('src', 'http://openweathermap.org/img/w/' + resultObj.weather[0].icon + '.png'); //go through and fix
 
-  if (resultObj.subject) {
-    bodyContentEl.innerHTML +=
-      '<strong>Subjects:</strong> ' + resultObj.subject.join(', ') + '<br/>';
-  } else {
-    bodyContentEl.innerHTML +=
-      '<strong>Subjects:</strong> No subject for this entry.';
-  }
+  //setup temp
+  console.log(resultObj.main.temp);
+  var tempEl = document.createElement('p');
+  tempEl.textContent = 'Temp: ' + resultObj.main.temp + ' F';
 
-  if (resultObj.description) {
-    bodyContentEl.innerHTML +=
-      '<strong>Description:</strong> ' + resultObj.description[0];
-  } else {
-    bodyContentEl.innerHTML +=
-      '<strong>Description:</strong>  No description for this entry.';
-  }
+  //setup humidity
+  console.log(resultObj.main.humidity);
+  var humidityEl = document.createElement('p');
+  humidityEl.textContent = 'Humidity: ' + resultObj.main.humidity + '%';
 
-  var linkButtonEl = document.createElement('a');
-  linkButtonEl.textContent = 'Read More';
-  linkButtonEl.setAttribute('href', resultObj.url);
-  linkButtonEl.classList.add('btn', 'btn-dark');
+  //setup wind speed
+  console.log();
+  console.log();
+  console.log();
+  var windEl = document.createElement('p');
+  windEl.textContent = 'Wind Speed: ' + resultObj.wind.speed + ' MPH';
 
-  resultBody.append(titleEl, bodyContentEl, linkButtonEl);
+  // var linkButtonEl = document.createElement('a');
+  // linkButtonEl.textContent = 'Read More';
+  // linkButtonEl.setAttribute('href', resultObj.url);
+  // linkButtonEl.classList.add('btn', 'btn-dark');
+  // resultBody.append(titleEl, bodyContentEl, linkButtonEl);
 
   resultContent.append(resultCard);
 }
