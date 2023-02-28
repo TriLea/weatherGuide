@@ -10,9 +10,14 @@ const API_Key = 'd7f16e022429c27e14665625f2e3a757';
 function reloadStorage()
 {
   let history = localStorage.getItem("history");
-  if (history == null)
+
+  if (history == null) //need this because first time I run it it is null
   {
     return;
+  }
+  else
+  {
+    history = JSON.parse(history);
   }
 
   var historyList = '';
@@ -20,8 +25,9 @@ function reloadStorage()
   for (let i = 0; i < history.length; i++) 
   {
     city = history[i];
-    historyList += `<options value=${city}>${city}</options>`;
+    historyList += `<option value="${city}">${city}</option>`;
   }
+  console.log("history list", historyList);
 
   inputSelect.innerHTML = historyList; //do backwards to get most recent first
 }
@@ -33,6 +39,7 @@ function addToHistory(cityName)
   let history = localStorage.getItem("history");
   if (history == null)
   {
+    console.log("empty");
     history = [];
   }
   else
@@ -40,17 +47,17 @@ function addToHistory(cityName)
     history = JSON.parse(history);
   }
   
-  for (var i = 0; i < history.length; i++)
+  for (var i = 0; i < history.length; i++) // change to a stack first in last out
   {
     if (history[i] == cityName)
     {
+      console.log("already in history")
       return;
     }
-    else
-    {
-      history.push(cityName);
-    }
   }
+
+  console.log("pushed to history");
+  history.push(cityName);
 
   localStorage.setItem("history", JSON.stringify(history));
   reloadStorage();
@@ -104,7 +111,7 @@ function printResults(resultObj) {
 
 function searchApi(city) {
   //geo coding api, lat and long
-  var locQueryUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_Key}`;
+  var locQueryUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${API_Key}`;
 
   fetch(locQueryUrl)
     .then(function (response) {
@@ -120,6 +127,7 @@ function searchApi(city) {
       console.log(locQueryUrl);
       console.log(locQueryUrl.coord.lat);
       console.log(locQueryUrl.coord.lon);
+      //printResults(locQueryUrl);
 
       weatherFiveDay(locQueryUrl.coord.lat, locQueryUrl.coord.lon);
     })
@@ -127,7 +135,7 @@ function searchApi(city) {
 
 function weatherFiveDay(lat, lon)
 {
-  var localFiveDay = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_Key}`;
+  var localFiveDay = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${API_Key}`;
 
   fetch(localFiveDay)
     .then(function (response) {
@@ -154,11 +162,11 @@ function weatherFiveDay(lat, lon)
 }
 
 function handleSearchFormSubmit(event) {
-  addToHistory(); //add cityname to param
   event.preventDefault();
 
   var searchInputVal = document.querySelector('#search-input').value;
   var formatInputVal = document.querySelector('#format-input').value;
+  addToHistory(searchInputVal);
 
   if (!searchInputVal) {
     console.error('You need a search input value!');
@@ -168,4 +176,5 @@ function handleSearchFormSubmit(event) {
   searchApi(searchInputVal, formatInputVal);
 }
 
+reloadStorage();
 searchForm.addEventListener('submit', handleSearchFormSubmit);
