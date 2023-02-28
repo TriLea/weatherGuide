@@ -69,7 +69,7 @@ function printResults(resultObj) {
 
   console.log(resultObj.dt_txt);
   var titleEl = document.createElement('h3'); // setup for date
-  titleEl.textContent = '<strong>Date:</strong> ' + resultObj.dt_text + '<br/>';
+  titleEl.innerHTML = '<strong>Date:</strong> ' + resultObj.dt_txt.split(' ')[0] + '<br/>';
 
   //setup icon for weather
   console.log(); // log out icon?
@@ -87,18 +87,18 @@ function printResults(resultObj) {
   humidityEl.textContent = 'Humidity: ' + resultObj.main.humidity + '%';
 
   //setup wind speed
-  console.log();
-  console.log();
-  console.log();
+  console.log(); //wing.deg
+  console.log(); //wing.gust
+  console.log(); //wing.speed
   var windEl = document.createElement('p');
-  windEl.textContent = 'Wind Speed: ' + resultObj.wind.speed + ' MPH';
+  windEl.textContent = 'Wind Speed: ' + resultObj.wind.speed + ' MPH'; // needs to include the other 2 properties
 
-  // var linkButtonEl = document.createElement('a');
-  // linkButtonEl.textContent = 'Read More';
-  // linkButtonEl.setAttribute('href', resultObj.url);
-  // linkButtonEl.classList.add('btn', 'btn-dark');
-  // resultBody.append(titleEl, bodyContentEl, linkButtonEl);
-
+  //append to resultBody
+  resultBody.append(titleEl);
+  resultBody.append(iconEl);
+  resultBody.append(tempEl);
+  resultBody.append(humidityEl);
+  resultBody.append(windEl);
   resultContent.append(resultCard);
 }
 
