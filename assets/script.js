@@ -66,6 +66,7 @@ function addToHistory(cityName)
 function printResults(resultObj) {
   console.log(resultObj);
 
+
   // set up `<div>` to hold result content
   var resultCard = document.createElement('div');
   resultCard.classList.add('card', 'bg-light', 'text-dark', 'mb-3', 'p-3');
@@ -149,6 +150,7 @@ function weatherFiveDay(lat, lon)
     .then(function (localFiveDay) {
       // write query to page so user knows what they are viewing
       console.log(localFiveDay);
+      resultContent.innerHTML = ''; // clears for the new search
       for (var i = 2; i < 40; i += 8) // for loop should go through same time, there are 8 a day 3 hour intervals starting at 6:00:00
       {
         //iterate throught the days
