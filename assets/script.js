@@ -4,6 +4,7 @@ var resultText = document.querySelector('#result-text');
 var resultContent = document.querySelector('#result-content');
 var searchForm = document.querySelector('#search-form');
 var inputSelect = document.querySelector('#format-input');
+var enteredCityEl = document.querySelector(".entered-city");
 
 const API_Key = 'd7f16e022429c27e14665625f2e3a757';
 
@@ -66,6 +67,8 @@ function addToHistory(cityName)
 function printResults(resultObj) {
   console.log(resultObj);
 
+  //resultText.textContent = ''; // clears for the new search
+  //resultText.innerHTML = `${enteredCityEl.value}'s 5 day forecast`;
 
   // set up `<div>` to hold result content
   var resultCard = document.createElement('div');
